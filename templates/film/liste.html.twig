@@ -2,6 +2,15 @@
 
 {% block contenu %}
     <p>Liste</p>
+    <ul>
+        {% for film in films %}
+            <li><a href="{{ path('film_detail', {'id': film.id}) }}">
+                    {{ film.id }} - {{ film.titre }} - {{ film.annee }}
+                </a></li>
+        {% else %}
+            <p>Aucun film a afficher</p>
+        {% endfor %}
+    </ul>
 {% endblock %}
 
 {% block title %}
