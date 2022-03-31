@@ -45,7 +45,8 @@ class FilmRepository extends ServiceEntityRepository
         }
     }
 
-    public function findFilm2000() {
+    public function findFilm2000()
+    {
         $em = $this->getEntityManager();
         $dql = "
             SELECT f FROM App\Entity\Film f
@@ -54,6 +55,23 @@ class FilmRepository extends ServiceEntityRepository
         ";
         $req = $em->createQuery($dql);
         return $req->getResult();
+    }
+
+    public function findFilm2000qb()
+    {
+        // Avec Query Builder
+        $qb = $this->createQueryBuilder('f');
+        $qb->andWhere('f.annee = 2000');
+        $qb->addOrderBy('f.titre', 'DESC');
+        $req = $qb->getQuery();
+        $resultat = $req->getResult();
+        return $resultat;
+        /*
+        $qb2 = ($this->createQueryBuilder('f'))
+            ->andWhere('f.annee = 2000')
+            ->addOrderBy('f.titre', 'DESC');
+        return $qb2->getQuery()->getResult();
+        */
     }
 
     // /**

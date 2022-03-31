@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\FilmRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: FilmRepository::class)]
 class Film
@@ -14,9 +15,18 @@ class Film
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 10,
+        maxMessage: 'Le nombre de caractères maximum est de 10'
+    )]
     private $titre;
 
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Assert\Range(min="1999", max="2001")
+     */
     private $annee;
 
     public function getId(): ?int

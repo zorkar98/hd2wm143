@@ -1,7 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block contenu %}
-    <p>Le film a été ajouté.</p>
+    <div>
+        {% form_theme monFormulaire 'foundation_5_layout.html.twig' %}
+        {{ form_start(monFormulaire) }}
+        {{ form_widget(monFormulaire) }}
+        <button>Envoyer</button>
+        {{ form_end(monFormulaire) }}
+    </div>
 {% endblock %}
 
 {% block title %}

@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Film;
+use App\Form\FilmType;
 use App\Repository\FilmRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -28,7 +30,7 @@ class FilmController extends AbstractController
     ): Response
     {
         // $films = $filmRepository->findAll();
-        $films = $filmRepository->findFilm2000();
+        $films = $filmRepository->findFilm2000qb();
         return $this->render(
             'film/liste.html.twig',
             compact("films")
@@ -37,21 +39,38 @@ class FilmController extends AbstractController
 
     #[Route('/film/ajouter', name: 'film_ajouter')]
     public function ajouter(
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        Request                $request
     ): Response
     {
+
         $film = new Film();
-        $film->setTitre("Gladiator");
-        $film->setAnnee(2000);
+        $filmForm = $this->createForm(FilmType::class, $film);
 
-        $film2 = (new Film())
-            ->setTitre("Morbius")
-            ->setAnnee(2022);
+        $filmForm->handleRequest($request);
 
-        $em->persist($film); // Servlet -> BLL -> DAL -> BO -> DAL -> BLL -> Servlet
-        $em->flush();
+        if (
+            $filmForm->isSubmitted()
+            && $filmForm->isValid()
+        ) {
+            $em->persist($film);
+            $em->flush();
+            $this->addFlash(
+                'bravo',
+                'Le film a bien été ajouté'
+            );
+            return $this->redirectToRoute('film_liste');
+        }
 
-        return $this->render('film/ajouter.html.twig');
+        return $this->render(
+            'film/ajouter.html.twig',
+            ['monFormulaire' => $filmForm->createView()]
+        );
+        // Avec notre copain compact(), on utilise renderForm()
+        return $this->renderForm(
+            'film/ajouter.html.twig',
+            compact("filmForm")
+        );
     }
 
 
@@ -59,7 +78,6 @@ class FilmController extends AbstractController
         name: 'film_detail',
         requirements: ["id" => "\d+"])]
     public function detail(
-        FilmRepository $filmRepository,
         Film $film
     ): Response
     {
