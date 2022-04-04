@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FilmRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -28,6 +30,14 @@ class Film
      * @Assert\Range(min="1999", max="2001")
      */
     private $annee;
+
+    #[ORM\ManyToMany(targetEntity: Acteur::class, mappedBy: 'films')]
+    private $acteurs;
+
+    public function __construct()
+    {
+        $this->acteurs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -57,4 +67,32 @@ class Film
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Acteur>
+     */
+    public function getActeurs(): Collection
+    {
+        return $this->acteurs;
+    }
+
+    public function addActeur(Acteur $acteur): self
+    {
+        if (!$this->acteurs->contains($acteur)) {
+            $this->acteurs[] = $acteur;
+            $acteur->addFilm($this);
+        }
+
+        return $this;
+    }
+
+    public function removeActeur(Acteur $acteur): self
+    {
+        if ($this->acteurs->removeElement($acteur)) {
+            $acteur->removeFilm($this);
+        }
+
+        return $this;
+    }
+
 }

@@ -6,7 +6,15 @@
         {% for film in films %}
             <li><a href="{{ path('film_detail', {'id': film.id}) }}">
                     {{ film.id }} - {{ film.titre }} - {{ film.annee }}
-                </a></li>
+                </a>
+                <div class="acteurs">
+                    {% for acteur in film.acteurs %}
+                        <div>{{ acteur.nom }} - {{ acteur.prenom }}</div>
+                    {% else %}
+                        <div>Aucun acteur pour ce film.</div>
+                    {% endfor %}
+                </div>
+            </li>
         {% else %}
             <p>Aucun film a afficher</p>
         {% endfor %}

@@ -29,8 +29,9 @@ class FilmController extends AbstractController
         FilmRepository $filmRepository
     ): Response
     {
-        // $films = $filmRepository->findAll();
-        $films = $filmRepository->findFilm2000qb();
+        // $films = $filmRepository->findAll(); // 4 requetes SQL
+        $films = $filmRepository->findFilmAvecActeurs(); // 1 requete SQL
+        // $films = $filmRepository->findFilm2000qb();
         return $this->render(
             'film/liste.html.twig',
             compact("films")

@@ -6,6 +6,7 @@ use App\Entity\Film;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -56,6 +57,21 @@ class FilmRepository extends ServiceEntityRepository
         $req = $em->createQuery($dql);
         return $req->getResult();
     }
+
+    public function findFilmAvecActeurs()
+    {
+        $qb = $this->createQueryBuilder('f');
+        $qb->leftJoin('f.acteurs', 'a')
+            ->addSelect('a');
+        $req = $qb->getQuery();
+        $req->setMaxResults(2);
+
+        $paginator = new Paginator($req);
+
+        // return $req->getResult();
+        return $paginator;
+    }
+
 
     public function findFilm2000qb()
     {
