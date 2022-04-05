@@ -9,5 +9,20 @@
         <li>
             <a href="{{ path('film_liste') }}">Liste des films</a>
         </li>
+        {% if is_granted('ROLE_ADMIN') %}
+            <li>
+                <a href="{{ path('film_ajouter') }}">Ajouter un film</a>
+            </li>
+        {% endif %}
+        {% if not app.user %}
+            <li>
+                <a href="{{ path('app_login') }}">Se connecter</a>
+            </li>
+        {% endif %}
+        {% if app.user %}
+            <li>
+                <a href="{{ path('app_logout') }}">Se déconnecter</a>
+            </li>
+        {% endif %}
     </ul>
 </nav>

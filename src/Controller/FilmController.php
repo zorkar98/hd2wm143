@@ -6,14 +6,16 @@ use App\Entity\Film;
 use App\Form\FilmType;
 use App\Repository\FilmRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/film', name: 'film')]
 class FilmController extends AbstractController
 {
-    #[Route('/film', name: 'film_index')]
+    #[Route('/', name: '_index')]
     public function index(): Response
     {
         $voiture = 'tesla';
@@ -24,7 +26,7 @@ class FilmController extends AbstractController
         ]);
     }
 
-    #[Route('/film/liste', name: 'film_liste')]
+    #[Route('/liste', name: '_liste')]
     public function liste(
         FilmRepository $filmRepository
     ): Response
@@ -38,13 +40,14 @@ class FilmController extends AbstractController
         );
     }
 
-    #[Route('/film/ajouter', name: 'film_ajouter')]
+
+    #[Route('/ajouter', name: '_ajouter')]
+    #[IsGranted('ROLE_ADMIN')]
     public function ajouter(
         EntityManagerInterface $em,
         Request                $request
     ): Response
     {
-
         $film = new Film();
         $filmForm = $this->createForm(FilmType::class, $film);
 
@@ -75,8 +78,8 @@ class FilmController extends AbstractController
     }
 
 
-    #[Route('/film/detail/{id}',
-        name: 'film_detail',
+    #[Route('/detail/{id}',
+        name: '_detail',
         requirements: ["id" => "\d+"])]
     public function detail(
         Film $film
