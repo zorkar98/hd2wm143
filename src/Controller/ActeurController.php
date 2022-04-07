@@ -32,7 +32,7 @@ class ActeurController extends AbstractController
         $acteur = new Acteur();
         $form = $this->createForm(ActeurType::class, $acteur);
         $form->handleRequest($request);
-        var_dump('oui');
+        dd('oui');
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($acteur);
