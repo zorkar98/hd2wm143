@@ -15,10 +15,10 @@ class Acteur
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 250)]
     private $nom;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 250)]
     private $prenom;
 
     #[ORM\ManyToMany(targetEntity: Film::class, inversedBy: 'acteurs')]
